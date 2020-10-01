@@ -12,7 +12,7 @@ namespace DAL.Interfaces
         List<CommentDTO> GetAll();
         List<CommentDTO> GetSort(string column = "CommentText");
         List<CommentDTO> Find(string comment);
-        void Add(CommentDTO comment);
+        CommentDTO Add(CommentDTO comment);
         void Delete(int id);
     }
 }

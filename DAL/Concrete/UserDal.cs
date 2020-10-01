@@ -69,8 +69,8 @@ namespace DAL.Concrete
             }
         }
 
-        public void Add(UserDTO user)
-        { //FIX ME ADD FOR WERE
+        public UserDTO Add(UserDTO user)
+        {
             try
             {
 
@@ -97,6 +97,7 @@ namespace DAL.Concrete
             {
                 Console.WriteLine(e.Message);
             }
+            return user;
         }
         public void Delete(int id)
         {

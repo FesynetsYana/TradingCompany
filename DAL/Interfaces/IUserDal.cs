@@ -12,7 +12,7 @@ namespace DAL.Interfaces
         List<UserDTO> GetAll();
         List<UserDTO> Find(string fullName);
         List<UserDTO> GetSort(string column = "FullName");
-        void Add(UserDTO user);
+        UserDTO Add(UserDTO user);//changed
         void Delete(int id);
     }
 }

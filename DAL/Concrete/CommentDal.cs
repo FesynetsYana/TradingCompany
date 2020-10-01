@@ -67,8 +67,8 @@ namespace DAL.Concrete
             }
         }
 
-        public void Add(CommentDTO comment)
-        { //FIX ME ADD FOR WERE
+        public CommentDTO Add(CommentDTO comment)
+        { 
             try
             {
                 using (SqlConnection conn = new SqlConnection(this.connectionString))
@@ -91,6 +91,7 @@ namespace DAL.Concrete
             {
                 Console.WriteLine(e.Message);
             }
+            return comment;
         }
         public void Delete(int id)
         {

@@ -12,8 +12,8 @@ namespace DAL.Interfaces
         List<TopicDTO> GetAll();
         List<TopicDTO> GetSort(string column = "Title");
         List<TopicDTO> Find(string title);
-        void Add(TopicDTO topic);
-        void Delete(int id);
+        TopicDTO Add(TopicDTO topic); //changed void->TopicDTO
+        long Delete(long id);
 
     }
 }

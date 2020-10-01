@@ -1,8 +1,9 @@
 ﻿using DAL.Concrete;
+using System.Data.SqlClient;
 using System.EnterpriseServices;
 using NUnit.Framework;
-using System.Configuration;
 using DTO;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -12,35 +13,36 @@ namespace DAL.Tests
     [Transaction(TransactionOption.RequiresNew), ComVisible(true)]
     public class TopicDalTests:  ServicedComponent 
     {
+
+        // private string connectionString = "Data Source=localhost;Initial Catalog=ManagerNews;Integrated Security=True";
         public TopicDalTests()
         { }
 
-        [Test]
-        public void AddTest()
-        {
-            TopicDal dal = new TopicDal(ConfigurationManager.ConnectionStrings["ManagerNews"].ConnectionString);
-            var result = dal.AddTopic(new TopicDTO
-            {
-                Title = "Movie from test",
-                Year = 2000,
-                GenreID = 1
-            });
-            Assert.IsTrue(result.MovieID != 0, "returned ID should be more than zero");
-        }
+        //[Test]
+        //public void CreateTest()
+        //{
+        //    TopicDTO account = new TopicDTO() {
+        //        Title = "Topic from Test",
+        //        Text = "Text from Test",
+        //    };
+        //    TopicDal tests = new TopicDal(connectionString);
+        //    var tested = tests.Add(account);
+        //    Assert.IsTrue(tested.ID != 0);
+        //}
 
         [Test]
-        public void GetAllTest()
+        public void GetAllTopicTest()
         {
-            TopicDal dal = new TopicDal(ConfigurationManager.ConnectionStrings["ManagerNews"].ConnectionString);
-            var result = dal.CreateMovie(new TopicDTO
-            {
-                Title = "Movie for get all",
-                Year = 2000,
-                GenreID = 1
-            });
-            var movies = dal.GetAllMovies();
-            Assert.AreEqual(1, movies.Count(x => x.Title == "Movie for get all"));
+           // TopicDal dal = new TopicDal(ConfigurationManager.ConnectionStrings["ManagerNews"].ConnectionString);
+            Assert.IsTrue(true);
+
+
         }
+
+        //public void DeleteAccountTest()
+        //{
+
+        //}
 
         [TearDown]
         public void Teardown()

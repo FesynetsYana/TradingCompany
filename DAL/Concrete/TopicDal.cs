@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Concrete
 {
-    public class TopicDal: ITopicDAL
+    public class TopicDal : ITopicDAL
     {
         private string connectionString;
 
@@ -19,58 +19,84 @@ namespace DAL.Concrete
             this.connectionString = connectionString;
         }
 
+
         public List<TopicDTO> GetAll()
         {
-
-            using (SqlConnection conn = new SqlConnection(this.connectionString))
-            using (SqlCommand comm = conn.CreateCommand())
+            List<TopicDTO> Topics = new List<TopicDTO>();
+            try
             {
-                conn.Open();
-                comm.CommandText = "select * from Topics";
-                SqlDataReader reader = comm.ExecuteReader();
-
-                List<TopicDTO> Topics = new List<TopicDTO>();
-                while (reader.Read())
+                using (SqlConnection conn = new SqlConnection(this.connectionString))
+                using (SqlCommand comm = conn.CreateCommand())
                 {
-                    TopicDTO TopicAdd = new TopicDTO();
-                    TopicAdd.ID = (long)reader["ID"];
-                    TopicAdd.UsersID = (long)reader["UsersID"];
-                    TopicAdd.CommentID = (long)reader["CommentID"];
-                    TopicAdd.Title = reader["Title"].ToString();
-                    TopicAdd.Text = reader["Text"].ToString();
-                    Topics.Add(TopicAdd);
-                }
+                    conn.Open();
+                    comm.CommandText = "select * from Topics";
+                    SqlDataReader reader = comm.ExecuteReader();
 
+                    while (reader.Read())
+                    {
+                        TopicDTO TopicAdd = new TopicDTO();
+                        TopicAdd.ID = (long)reader["ID"];
+                        TopicAdd.UsersID = (long)reader["UsersID"];
+                        TopicAdd.CommentID = (long)reader["CommentID"];
+                        TopicAdd.Title = reader["Title"].ToString();
+                        TopicAdd.Text = reader["Text"].ToString();
+                        Topics.Add(TopicAdd);
+                    }
+
+                    return Topics;
+                }
+            }
+            catch (Exception e)
+            {
+                TopicDTO TopicAdd = new TopicDTO();
+                TopicAdd.ID = -1;
+                Console.WriteLine(e.Message);
+                Topics.Clear();
+                Topics.Add(TopicAdd);
                 return Topics;
             }
         }
+
+
         public List<TopicDTO> GetSort(string column = "Title")
         {
-            using (SqlConnection conn = new SqlConnection(this.connectionString))
-            using (SqlCommand comm = conn.CreateCommand())
+               List<TopicDTO> Topics = new List<TopicDTO>();
+            try
             {
-                conn.Open();
-                comm.CommandText = "select * from Topics order by " + column;
-                SqlDataReader reader = comm.ExecuteReader();
-
-                List<TopicDTO> Topics = new List<TopicDTO>();
-                while (reader.Read())
+                using (SqlConnection conn = new SqlConnection(this.connectionString))
+                using (SqlCommand comm = conn.CreateCommand())
                 {
-                    TopicDTO TopicAdd = new TopicDTO();
-                    TopicAdd.ID = (long)reader["ID"];
-                    TopicAdd.UsersID = (long)reader["UsersID"];
-                    TopicAdd.CommentID = (long)reader["CommentID"];
-                    TopicAdd.Title = reader["Title"].ToString();
-                    TopicAdd.Text = reader["Text"].ToString();
-                    Topics.Add(TopicAdd);
+                    conn.Open();
+                    comm.CommandText = "select * from Topics order by " + column;
+                    SqlDataReader reader = comm.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        TopicDTO TopicAdd = new TopicDTO();
+                        TopicAdd.ID = (long)reader["ID"];
+                        TopicAdd.UsersID = (long)reader["UsersID"];
+                        TopicAdd.CommentID = (long)reader["CommentID"];
+                        TopicAdd.Title = reader["Title"].ToString();
+                        TopicAdd.Text = reader["Text"].ToString();
+                        Topics.Add(TopicAdd);
+                    }
+                    conn.Close();
+                    return Topics;
                 }
-                conn.Close();
+            }
+            catch(Exception e)
+            {
+                TopicDTO TopicAdd = new TopicDTO();
+                TopicAdd.ID = -1;
+                Console.WriteLine(e.Message);
+                Topics.Clear();
+                Topics.Add(TopicAdd);
                 return Topics;
             }
         }
 
-        public void Add(TopicDTO topic)
-        { 
+        public TopicDTO Add(TopicDTO topic) //changed (void->TopicDTO)
+        {
             try
             {
                 using (SqlConnection conn = new SqlConnection(this.connectionString))
@@ -89,10 +115,17 @@ namespace DAL.Concrete
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                TopicDTO topicDto = new TopicDTO();
+                topicDto.ID = -1;
+                return topicDto;
             }
+            return topic;
         }
-        public void Delete(int id)
+        public long Delete(long id)
         {
+            try
+            {
+
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             using (SqlCommand comm = conn.CreateCommand())
             {
@@ -101,10 +134,21 @@ namespace DAL.Concrete
                 comm.Parameters.AddWithValue("@ID", id);
                 comm.ExecuteNonQuery();
                 conn.Close();
+                    return id;
+            }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return -1;
             }
         }
         public List<TopicDTO> Find(string title)
         {
+            List<TopicDTO> Topics = new List<TopicDTO>();
+            try
+            {
+
             using (SqlConnection conn = new SqlConnection(this.connectionString))
             using (SqlCommand comm = conn.CreateCommand())
             {
@@ -112,7 +156,6 @@ namespace DAL.Concrete
                 comm.CommandText = "select * from Topics where Title Like '%" + title + "%'";
                 SqlDataReader reader = comm.ExecuteReader();
 
-                List<TopicDTO> Topics = new List<TopicDTO>();
                 while (reader.Read())
                 {
                     TopicDTO TopicAdd = new TopicDTO();
@@ -121,10 +164,19 @@ namespace DAL.Concrete
                     TopicAdd.CommentID = (long)reader["CommentID"];
                     TopicAdd.Title = reader["Title"].ToString();
                     TopicAdd.Text = reader["Text"].ToString();
-                    Topics.Add(TopicAdd);   
+                    Topics.Add(TopicAdd);
 
                 }
                 conn.Close();
+                return Topics;
+            }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                TopicDTO TopicAdd = new TopicDTO();
+                TopicAdd.ID = -1;
+                Topics.Add(TopicAdd);
                 return Topics;
             }
         }
